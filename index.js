@@ -18,8 +18,8 @@ class ArcEvents{
     }
 
     setCatch(_event){
-        if(!this.listeners[_event]){
-            this.catches[_event];
+        if(!this.listeners[_event] && !this.catches[_event]){
+            this.catches[_event] = new $.ArcArray();
         }
     }
 
@@ -77,11 +77,13 @@ class ArcEvents{
         if(this.listeners[_event] !== undefined){
             var index = this.listeners[_event].indexOf(_listener);
             if(index !== -1){
-                this.listeners[_event].splice(index);
+                this.listeners[_event].splice(index,1);
+                if(!this.listeners[_event].length){
+                    delete this.listeners[_event];
+                }
             }
         }
     }
-
 
     removeAllListeners(_event){
         if(_event !== undefined){
@@ -94,7 +96,7 @@ class ArcEvents{
 
     getListeners(_event){
         if(_event !== undefined){
-            return this.listeners[_event] || new $.ArcObject();
+            return this.listeners[_event] || new $.ArcArray();
         }
         else{
             return this.listeners;
@@ -120,6 +122,7 @@ class ArcEvents{
 
         if(!this.catchAll && this.catches[_event] === undefined && this.listeners[_event] === undefined){
             //It's uncaught...
+            this.uncaughtCounter++;
         }
     }
 
@@ -127,7 +130,7 @@ class ArcEvents{
         if(this.states[_event] !== true){
             var listeners = this.states[_event];
             this.states[_event] = true;
-            if($.is(listeners) === 'ArcArray'){
+            if($.is(listeners,true) === 'ArcArray'){
                 listeners.each(function(_listener){
                     _listener();
                 });
@@ -145,6 +148,7 @@ class ArcEvents{
         this.catches = new $.ArcObject();
         this.catchAll = undefined;
         this.idCounter = 0;
+        this.uncaughtCounter = 0;
     }
 
     clean(_id){
@@ -157,7 +161,7 @@ class ArcEvents{
 
     static mixin(_obj){
         if($.is(_obj) !== 'object'){
-            throw new TypeError('ArcEvents.mixin requires an object to mixin with: '+is(_obj,true));
+            throw new TypeError('ArcEvents.mixin requires an object to mixin with: '+$.is(_obj,true));
         }
         var Events = new ArcEvents();
         var fList = new $.ArcArray('setCatchAll','setCatch','on','onState','once','removeListener','removeAllListeners','getListeners','emit','emitState','clearState','clear','clean');
