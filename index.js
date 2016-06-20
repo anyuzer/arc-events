@@ -11,6 +11,15 @@ class ArcEvents{
         this.clear(); //Initialization is the same as a reset
     }
 
+    clear(){
+        this.listeners = new $.ArcObject();
+        this.states = new $.ArcObject();
+        this.catches = new $.ArcObject();
+        this.catchAll = undefined;
+        this.idCounter = 0;
+        this.uncaughtCounter = 0;
+    }
+
     setCatchAll(_f){
         if($.is(_f) === 'function' || _f === undefined){
             this.catchAll = _f;
@@ -32,7 +41,12 @@ class ArcEvents{
         if(this.listeners[_event] === undefined){
             this.listeners[_event] = new $.ArcArray();
         }
-        this.listeners[_event].push(_listener);
+
+        if(!_customId){
+            this.idCounter++;
+            _customId = this.idCounter;
+        }
+        this.listeners[_event].push([_customId,_listener]);
 
         if($.is(this.catches[_event],true) === 'ArcArray'){
             heap = this.catches[_event];
@@ -41,9 +55,11 @@ class ArcEvents{
                 _listener(..._eventTrigger);
             });
         }
+
+        return _customId;
     }
 
-    onState(_event,_listener,_customId){
+    onState(_event,_listener){
         if($.is(_listener) !== 'function'){
             throw new TypeError('Events.onState requires listener to be a callable function');
         }
@@ -67,7 +83,7 @@ class ArcEvents{
             this.removeListener(_event,onceListener);
             _listener(...arguments); //Not sure if I can actually do a spread on arguments yet. WE SHALL SEE (otherwise apply will work)
         }.bind(this);
-        this.on(_event,onceListener);
+        return this.on(_event,onceListener,_customId);
     }
 
     removeListener(_event,_listener){
@@ -75,13 +91,16 @@ class ArcEvents{
             throw new TypeError('Events.removeListener requires listener to be a callable function')
         }
         if(this.listeners[_event] !== undefined){
-            var index = this.listeners[_event].indexOf(_listener);
-            if(index !== -1){
-                this.listeners[_event].splice(index,1);
-                if(!this.listeners[_event].length){
-                    delete this.listeners[_event];
+            this.listeners[_event].each(function(_data,_index,_array){
+                let [id,listener] = _data;
+                if(listener === _listener){
+                    _array.splice(_index,1);
+                    if(!_array.length){
+                        delete this.listeners[_event];
+                    }
+                    return false;
                 }
-            }
+            }.bind(this));
         }
     }
 
@@ -112,8 +131,9 @@ class ArcEvents{
         }
 
         var listeners = this.getListeners(_event);
-        listeners.each(function(_listener){
-            _listener(..._args);
+        listeners.each(function(_array){
+            let [id,listener] = _array;
+            listener(..._args);
         });
 
         if(this.catches[_event] && !listeners.length){
@@ -142,17 +162,27 @@ class ArcEvents{
         delete this.states[_event];
     }
 
-    clear(){
-        this.listeners = new $.ArcObject();
-        this.states = new $.ArcObject();
-        this.catches = new $.ArcObject();
-        this.catchAll = undefined;
-        this.idCounter = 0;
-        this.uncaughtCounter = 0;
-    }
-
     clean(_id){
-
+        var cleaned = false;
+        this.listeners.each(function(_event,_listeners){
+            var _continue = true;
+            if($.is(_listeners,true) === 'ArcArray'){
+                _listeners.each(function(_data,_index,_listenerArray){
+                    let [id,listener] = _data;
+                    if(id === _id){
+                        _continue = false;
+                        cleaned = true;
+                        _listenerArray.splice(_index,1);
+                        if(!_listenerArray.length){
+                            delete this.listeners[_event];
+                        }
+                        return false;
+                    }
+                }.bind(this));
+            }
+            return _continue;
+        }.bind(this));
+        return cleaned;
     }
 
     toString(){

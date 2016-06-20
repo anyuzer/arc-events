@@ -180,12 +180,42 @@ tap.test('ArcEvents.removeAllListeners2',function(_test){
     _test.end();
 });
 
+tap.test('ArcEvents.clean',function(_test){
+    var fail = function(){
+        _test.fail();
+    };
+    EventTest.clear();
+    EventTest.setCatchAll(function(){
+        _test.pass('No event detected. Clean succeeded');
+        _test.end();
+    });
+
+    let id = EventTest.on('pass',fail);
+    _test.equal(EventTest.clean(id),true);
+    EventTest.emit('pass');
+});
+
+tap.test('ArcEvents.clean2',function(_test){
+    var fail = function(){
+        _test.fail();
+    };
+    EventTest.clear();
+    EventTest.setCatchAll(function(){
+        _test.pass('No event detected. Clean succeeded');
+        _test.end();
+    });
+
+    EventTest.on('pass',fail,'CUSTOMID');
+    _test.equal(EventTest.clean('CUSTOMID'),true);
+    EventTest.emit('pass');
+});
+
 tap.test('ArcEvents.getListeners',function(_test){
     let f = function(){};
     EventTest.clear();
     EventTest.on('test',f);
     let listeners = EventTest.getListeners('test');
-    _test.same(new ArcArray(f),listeners);
+    _test.same(new ArcArray([1,f]),listeners);
     _test.end();
 });
 
