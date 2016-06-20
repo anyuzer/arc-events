@@ -1,0 +1,30 @@
+{
+  "name": "arc-events",
+  "version": "0.0.1",
+  "description": "Independent Events class",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://anyuzer@github.com/anyuzer/arc-events.git"
+  },
+  "keywords": [
+    "Events"
+  ],
+  "author": "Ian Reid",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anyuzer/arc-events/issues"
+  },
+  "homepage": "https://github.com/anyuzer/arc-events#readme",
+  "dependencies": {
+    "arc-array": "^2.0.3",
+    "arc-is": "^1.0.3",
+    "arc-object": "^1.0.3"
+  },
+  "devDependencies": {
+    "tap": "^5.7.2"
+  }
+}
