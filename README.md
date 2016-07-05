@@ -135,6 +135,9 @@ Set a callback to listen for an event being emitted. customId is an optional id,
 ### .onState(`state:String,listener:Function`)
 Set a callback to listen for a state. If that state already exists, the listener will not be bound internally and simply immediately fire, otherwise it will be bound internally until the state is emitted at which point it will be fired and cleared.
 
+### .checkState(`state:String`)
+Check to see whether a state has fired. Returns `true` or `false`
+
 ### .once(`event:String, listener:Function [,customId:Mixed]`)
 Set a callback to listen for an event being emitted. When the listener fires, it will automatically be removed internally as a listener and will no longer fire on subsequent events.
 
