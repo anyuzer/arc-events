@@ -158,6 +158,10 @@ class ArcEvents{
         }
     }
 
+    checkState(_state){
+        return (this.states[_state] === true ? true : false);
+    }
+
     clearState(_event){
         delete this.states[_event];
     }

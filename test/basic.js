@@ -51,6 +51,18 @@ tap.test('ArcEvents.onState3',function(_test){
     },500);
 });
 
+tap.test('ArcEvents.checkState',function(_test){
+    EventTest.clear();
+
+    //Has not fired
+    _test.equal(EventTest.checkState('loaded'),false);
+    EventTest.emitState('loaded');
+
+    //Has fired
+    _test.equal(EventTest.checkState('loaded'),true);
+    _test.end();
+});
+
 tap.test('ArcEvents.setCatchAll',function(_test){
     EventTest.clear();
 
