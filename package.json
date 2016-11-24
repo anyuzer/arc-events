@@ -20,9 +20,9 @@
   },
   "homepage": "https://github.com/anyuzer/arc-events#readme",
   "dependencies": {
-    "arc-array": "^2.0.3",
-    "arc-is": "^1.0.3",
-    "arc-object": "^1.0.3"
+    "arc-array": "^3.2.1",
+    "arc-is": "^1.0.5",
+    "arc-object": "^1.2.1"
   },
   "devDependencies": {
     "tap": "^5.7.2"

@@ -51,7 +51,7 @@ class ArcEvents{
         if($.is(this.catches[_event],true) === 'ArcArray'){
             heap = this.catches[_event];
             delete this.catches[_event];
-            heap.each(function(_eventTrigger){
+            heap.each(function(_index,_eventTrigger){
                 _listener(..._eventTrigger);
             });
         }
@@ -91,7 +91,7 @@ class ArcEvents{
             throw new TypeError('Events.removeListener requires listener to be a callable function')
         }
         if(this.listeners[_event] !== undefined){
-            this.listeners[_event].each(function(_data,_index,_array){
+            this.listeners[_event].each(function(_index,_data,_array){
                 let [id,listener] = _data;
                 if(listener === _listener){
                     _array.splice(_index,1);
@@ -131,7 +131,7 @@ class ArcEvents{
         }
 
         var listeners = this.getListeners(_event);
-        listeners.each(function(_array){
+        listeners.each(function(_index,_array){
             let [id,listener] = _array;
             listener(..._args);
         });
@@ -151,7 +151,7 @@ class ArcEvents{
             var listeners = this.states[_event];
             this.states[_event] = true;
             if($.is(listeners,true) === 'ArcArray'){
-                listeners.each(function(_listener){
+                listeners.each(function(_index,_listener){
                     _listener();
                 });
             }
@@ -171,7 +171,7 @@ class ArcEvents{
         this.listeners.each(function(_event,_listeners){
             var _continue = true;
             if($.is(_listeners,true) === 'ArcArray'){
-                _listeners.each(function(_data,_index,_listenerArray){
+                _listeners.each(function(_index,_data,_listenerArray){
                     let [id,listener] = _data;
                     if(id === _id){
                         _continue = false;
@@ -199,7 +199,7 @@ class ArcEvents{
         }
         var Events = new ArcEvents();
         var fList = new $.ArcArray('setCatchAll','setCatch','on','onState','once','removeListener','removeAllListeners','getListeners','emit','emitState','clearState','clear','clean');
-        fList.each(function(_fName){
+        fList.each(function(_index,_fName){
             _obj[_fName] = Events[_fName];
         });
         return _obj;
