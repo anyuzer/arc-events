@@ -239,15 +239,19 @@ tap.test('ArcEvents.mixin',function(_test){
     var obj = {};
     var mix = ArcEvents.mixin(obj);
 
-    _test.same(mix.on,EventTest.on);
-    _test.same(mix.onState,EventTest.onState);
-    _test.same(mix.setCatchAll,EventTest.setCatchAll);
-    _test.same(mix.setCatch,EventTest.setCatch);
-    _test.same(mix.on,EventTest.on);
-    _test.same(mix.once,EventTest.once);
-    _test.same(mix.removeListener,EventTest.removeListener);
-    _test.same(mix.removeAllListeners,EventTest.removeAllListeners);
-    _test.same(mix.getListeners,EventTest.getListeners);
+    _test.equal(is(mix.setCatchAll),'function');
+    _test.equal(is(mix.setCatch),'function');
+    _test.equal(is(mix.on),'function');
+    _test.equal(is(mix.onState),'function');
+    _test.equal(is(mix.once),'function');
+    _test.equal(is(mix.removeListener),'function');
+    _test.equal(is(mix.removeAllListeners),'function');
+    _test.equal(is(mix.getListeners),'function');
+    _test.equal(is(mix.emit),'function');
+    _test.equal(is(mix.emitState),'function');
+    _test.equal(is(mix.clearState),'function');
+    _test.equal(is(mix.clear),'function');
+    _test.equal(is(mix.clean),'function');
     _test.equal(obj,mix);
 
     _test.end();

@@ -200,7 +200,7 @@ class ArcEvents{
         var Events = new ArcEvents();
         var fList = new $.ArcArray('setCatchAll','setCatch','on','onState','once','removeListener','removeAllListeners','getListeners','emit','emitState','clearState','clear','clean');
         fList.each(function(_index,_fName){
-            _obj[_fName] = Events[_fName];
+            _obj[_fName] = Events[_fName].bind(Events);
         });
         return _obj;
     }
