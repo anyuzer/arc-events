@@ -115,6 +115,23 @@ tap.test('ArcEvents.on',function(_test){
     EventTest.emit('event',['DATA']);
 });
 
+tap.test('ArcEvents.on(async)',function(_test){
+    EventTest.clear();
+
+    _test.throws(function(){
+        EventTest.on('event','STRING');
+    },TypeError);
+
+
+    //Most basic test
+    EventTest.on('event',async function(_data){
+        _test.equal(_data,'DATA');
+        _test.end();
+    });
+
+    EventTest.emit('event',['DATA']);
+});
+
 tap.test('ArcEvents.once',function(_test){
     EventTest.clear();
 
@@ -124,7 +141,7 @@ tap.test('ArcEvents.once',function(_test){
 
 
     var counter = 0;
-    
+
     EventTest.once('once',function(){
         counter++;
         _test.equal(counter,1);

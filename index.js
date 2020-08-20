@@ -17,7 +17,7 @@ class ArcEvents{
     }
 
     setCatchAll(_f){
-        if(is(_f) === 'function' || _f === undefined){
+        if(is(_f) === 'function' || is(_f) === 'asyncfunction' || _f === undefined){
             this.catchAll = _f;
         }
     }
@@ -30,7 +30,7 @@ class ArcEvents{
 
     on(_event,_listener,_customId){
         let heap;
-        if(is(_listener) !== 'function'){
+        if(is(_listener) !== 'function' && is(_listener) !== 'asyncfunction'){
             throw new TypeError('Events.on requires listener to be a callable function');
         }
 
@@ -56,7 +56,7 @@ class ArcEvents{
     }
 
     onState(_event,_listener){
-        if(is(_listener) !== 'function'){
+        if(is(_listener) !== 'function' && is(_listener) !== 'asyncfunction'){
             throw new TypeError('Events.onState requires listener to be a callable function');
         }
         if(this.states[_event] === true){
@@ -72,7 +72,7 @@ class ArcEvents{
 
 
     once(_event,_listener,_customId){
-        if(is(_listener) !== 'function'){
+        if(is(_listener) !== 'function' && is(_listener) !== 'asyncfunction'){
             throw new TypeError('Events.once requires listener to be a callable function');
         }
         let onceListener = () => {
@@ -83,7 +83,7 @@ class ArcEvents{
     }
 
     removeListener(_event,_listener){
-        if(is(_listener) !== 'function'){
+        if(is(_listener) !== 'function' && is(_listener) !== 'asyncfunction'){
             throw new TypeError('Events.removeListener requires listener to be a callable function')
         }
         if(this.listeners[_event] !== undefined){
