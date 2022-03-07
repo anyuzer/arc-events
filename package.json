@@ -4,7 +4,7 @@
   "description": "Independent Events class",
   "main": "index.js",
   "scripts": {
-    "test": "tap test/*.js"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -14,7 +14,7 @@
     "Events"
   ],
   "author": "Ian Reid",
-  "license": "ISC",
+  "license": "Unlicense",
   "bugs": {
     "url": "https://github.com/anyuzer/arc-events/issues"
   },
@@ -25,6 +25,6 @@
     "arc-object": "^3.1.0"
   },
   "devDependencies": {
-    "tap": "^5.7.2"
+    "jest": "^27.5.1"
   }
 }
