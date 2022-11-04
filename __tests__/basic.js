@@ -1,7 +1,7 @@
-const is = require('arc-is');
-const ArcArray = require('arc-array');
+import {jest} from '@jest/globals';
 
-const ArcEvents = require('../index');
+import is from 'arc-is';
+import ArcEvents from "../index.js";
 
 describe('ArcEvents tests', () => {
     const EventTest = new ArcEvents();

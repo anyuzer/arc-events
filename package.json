@@ -3,8 +3,9 @@
   "version": "2.0.2",
   "description": "Independent Events class",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "jest --coverage"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
   },
   "repository": {
     "type": "git",
@@ -20,11 +21,11 @@
   },
   "homepage": "https://github.com/anyuzer/arc-events#readme",
   "dependencies": {
-    "arc-array": "^4.2.0",
-    "arc-is": "^1.0.6",
-    "arc-object": "^3.1.0"
+    "arc-array": "^5.0.0",
+    "arc-is": "^2.0.0",
+    "arc-object": "^4.0.0"
   },
   "devDependencies": {
-    "jest": "^27.5.1"
+    "jest": "^29.2.2"
   }
 }

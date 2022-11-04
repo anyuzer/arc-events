@@ -1,6 +1,6 @@
-const is = require('arc-is');
-const ArcObject = require('arc-object');
-const ArcArray = require('arc-array');
+import is from 'arc-is';
+import ArcObject from "arc-object";
+import ArcArray from "arc-array";
 
 class ArcEvents{
     constructor(){
@@ -202,4 +202,4 @@ class ArcEvents{
     }
 }
 
-module.exports = ArcEvents;
+export default ArcEvents;
