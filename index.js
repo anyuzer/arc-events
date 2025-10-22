@@ -3,28 +3,36 @@ import ArcObject from "arc-object";
 import ArcArray from "arc-array";
 
 class ArcEvents{
+    #listeners = new ArcObject();
+    #states = new ArcObject();
+    #catches = new ArcObject();
+    #catchAll = undefined;
+    #idCounter = 0;
+    #uncaughtCounter = 0;
+
+
     constructor(){
         this.clear(); //Initialization is the same as a reset
     }
 
     clear(){
-        this.listeners = new ArcObject();
-        this.states = new ArcObject();
-        this.catches = new ArcObject();
-        this.catchAll = undefined;
-        this.idCounter = 0;
-        this.uncaughtCounter = 0;
+        this.#listeners = new ArcObject();
+        this.#states = new ArcObject();
+        this.#catches = new ArcObject();
+        this.#catchAll = undefined;
+        this.#idCounter = 0;
+        this.#uncaughtCounter = 0;
     }
 
     setCatchAll(_f){
         if(is(_f) === 'function' || is(_f) === 'asyncfunction' || _f === undefined){
-            this.catchAll = _f;
+            this.#catchAll = _f;
         }
     }
 
     setCatch(_event){
-        if(!this.listeners[_event] && !this.catches[_event]){
-            this.catches[_event] = new ArcArray();
+        if(!this.#listeners[_event] && !this.#catches[_event]){
+            this.#catches[_event] = new ArcArray();
         }
     }
 
@@ -34,19 +42,19 @@ class ArcEvents{
             throw new TypeError('Events.on requires listener to be a callable function');
         }
 
-        if(this.listeners[_event] === undefined){
-            this.listeners[_event] = new ArcArray();
+        if(this.#listeners[_event] === undefined){
+            this.#listeners[_event] = new ArcArray();
         }
 
         if(!_customId){
-            this.idCounter++;
-            _customId = this.idCounter;
+            this.#idCounter++;
+            _customId = this.#idCounter;
         }
-        this.listeners[_event].push([_customId,_listener]);
+        this.#listeners[_event].push([_customId,_listener]);
 
-        if(is(this.catches[_event],true) === 'ArcArray'){
-            heap = this.catches[_event];
-            delete this.catches[_event];
+        if(is(this.#catches[_event],true) === 'ArcArray'){
+            heap = this.#catches[_event];
+            delete this.#catches[_event];
             heap.forEach((_eventTrigger)=>{
                 _listener(..._eventTrigger);
             });
@@ -59,14 +67,14 @@ class ArcEvents{
         if(is(_listener) !== 'function' && is(_listener) !== 'asyncfunction'){
             throw new TypeError('Events.onState requires listener to be a callable function');
         }
-        if(this.states[_event] === true){
+        if(this.#states[_event] === true){
             _listener();
         }
         else{
-            if(this.states[_event] === undefined){
-                this.states[_event] = new ArcArray();
+            if(this.#states[_event] === undefined){
+                this.#states[_event] = new ArcArray();
             }
-            this.states[_event].push(_listener);
+            this.#states[_event].push(_listener);
         }
     }
 
@@ -86,13 +94,13 @@ class ArcEvents{
         if(is(_listener) !== 'function' && is(_listener) !== 'asyncfunction'){
             throw new TypeError('Events.removeListener requires listener to be a callable function')
         }
-        if(this.listeners[_event] !== undefined){
-            this.listeners[_event].forEach((_data,_index,_array) => {
+        if(this.#listeners[_event] !== undefined){
+            this.#listeners[_event].forEach((_data,_index,_array) => {
                 let [id,listener] = _data;
                 if(listener === _listener){
                     _array.splice(_index,1);
                     if(!_array.length){
-                        delete this.listeners[_event];
+                        delete this.#listeners[_event];
                     }
                     return false;
                 }
@@ -102,28 +110,28 @@ class ArcEvents{
 
     removeAllListeners(_event){
         if(_event !== undefined){
-            delete this.listeners[_event];
+            delete this.#listeners[_event];
         }
         else{
-            this.listeners = new ArcObject();
+            this.#listeners = new ArcObject();
         }
     }
 
     getListeners(_event){
         if(_event !== undefined){
-            return this.listeners[_event] || new ArcArray();
+            return this.#listeners[_event] || new ArcArray();
         }
         else{
-            return this.listeners;
+            return this.#listeners;
         }
     }
 
     emit(_event,_args){
         //Hmm
         _args = (is(_args) === 'array' ? _args : new ArcArray());
-        if(this.catchAll && this.listeners[_event] === undefined && this.catches[_event] === undefined){
+        if(this.#catchAll && this.#listeners[_event] === undefined && this.#catches[_event] === undefined){
             _args.unshift(_event);
-            this.catchAll(..._args);
+            this.#catchAll(..._args);
         }
 
         const listeners = this.getListeners(_event);
@@ -132,20 +140,20 @@ class ArcEvents{
             listener(..._args);
         });
 
-        if(this.catches[_event] && !listeners.length){
-            this.catches[_event].push(_args);
+        if(this.#catches[_event] && !listeners.length){
+            this.#catches[_event].push(_args);
         }
 
-        if(!this.catchAll && this.catches[_event] === undefined && this.listeners[_event] === undefined){
+        if(!this.#catchAll && this.#catches[_event] === undefined && this.#listeners[_event] === undefined){
             //It's uncaught...
-            this.uncaughtCounter++;
+            this.#uncaughtCounter++;
         }
     }
 
     emitState(_event){
-        if(this.states[_event] !== true){
-            const listeners = this.states[_event];
-            this.states[_event] = true;
+        if(this.#states[_event] !== true){
+            const listeners = this.#states[_event];
+            this.#states[_event] = true;
             if(is(listeners,true) === 'ArcArray'){
                 listeners.forEach((_listener) => {
                     _listener();
@@ -155,16 +163,16 @@ class ArcEvents{
     }
 
     checkState(_state){
-        return (this.states[_state] === true ? true : false);
+        return (this.#states[_state] === true ? true : false);
     }
 
     clearState(_event){
-        delete this.states[_event];
+        delete this.#states[_event];
     }
 
     clean(_id){
         let cleaned = false;
-        this.listeners.forEach((_listeners,_event) => {
+        this.#listeners.forEach((_listeners,_event) => {
             let _continue = true;
             if(is(_listeners,true) === 'ArcArray'){
                 _listeners.forEach((_data,_index,_listenerArray) => {
@@ -174,7 +182,7 @@ class ArcEvents{
                         cleaned = true;
                         _listenerArray.splice(_index,1);
                         if(!_listenerArray.length){
-                            delete this.listeners[_event];
+                            delete this.#listeners[_event];
                         }
                         return false;
                     }

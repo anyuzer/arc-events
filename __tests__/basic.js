@@ -174,10 +174,10 @@ describe('ArcEvents tests', () => {
 
     test('Type Errors should be thrown when a listener is not callable', () => {
         EventTest.clear();
-        expect(() => { EventTest.on('something','something'); }).toThrowError();
-        expect(() => { EventTest.onState('something','something'); }).toThrowError();
-        expect(() => { EventTest.once('something','something'); }).toThrowError()
-        expect(() => { EventTest.removeListener('something','something'); }).toThrowError()
-        expect(() => { ArcEvents.mixin('something'); }).toThrowError()
+        expect(() => { EventTest.on('something','something'); }).toThrow();
+        expect(() => { EventTest.onState('something','something'); }).toThrow();
+        expect(() => { EventTest.once('something','something'); }).toThrow()
+        expect(() => { EventTest.removeListener('something','something'); }).toThrow()
+        expect(() => { ArcEvents.mixin('something'); }).toThrow()
     })
 });
